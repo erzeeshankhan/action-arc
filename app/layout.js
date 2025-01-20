@@ -3,9 +3,12 @@ import "./globals.css";
 import { Inter } from 'next/font/google';
 import Header from '@/components/header';
 import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from '@clerk/themes'
 
 const inter = Inter({ subsets: ["latin"] });
 
+
+// Title and desc of app
 export const metadata = {
   title: "ActionArc",
   description: "A project management tool to streamline workflows and boost productivity.",
@@ -13,13 +16,23 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider>
+    // Clerk forms appearance base theme set to dark , changes in appearance for signin/up pages can be done from here
+    <ClerkProvider
+      appearance={{
+        baseTheme: dark,
+        variables:{
+          
+        },
+      }}
+    >
 
       <html lang="en">
         <head>
           <meta name="description" content={metadata.description} />
         </head>
         <body className={`${inter.className}`}>
+
+        {/* Nextjs page theme set to dark, imported from theme-provider */}
           <ThemeProvider attribute="class" defaultTheme="dark">
             <Header />
             <main className="min-h-screen">
