@@ -71,12 +71,42 @@ body {
   }
 }
 
+
+
+
+
+
 .dotted-background {
+  background-color: #121212; /* Dark Blue */
+  background-image: radial-gradient(#2b394d 1px, transparent 1px); /* Light Slate Blue */
+  background-size: 30px 30px;
+}
+
+
+
+
+/* .dotted-background {
+  background-color: #121212; 
+  background-image: 
+    linear-gradient(120deg, #356d85, #36697a, #121212), 
+    radial-gradient(#b4c6e7 1px, transparent 1px); 
+  background-blend-mode: overlay;
+  background-size: 30px 30px;
+} 
+
+.features{
+  background-color: #07202b;
+}*/
+
+
+
+
+/* .dotted-background {
   background-color: #0a111f;
   background-image: radial-gradient(#4a5568 1px, transparent 1px);
   background-size: 30px 30px;
-  /* animation: moveDots 10s linear infinite; */
-}
+  /* animation: moveDots 10s linear infinite;
+} */
 
 /* 
 .dotted-background{
