@@ -11,13 +11,22 @@ const isProtectedRoute = createRouteMatcher([
 ]);
 
 
-export default clerkMiddleware((auth,req)=>{
+export default clerkMiddleware((auth, req) => {
   // below condition: it takes authentication userid & protected routes i.e., if the user is not signed in and wants to access pretected routes, redirect him to the sign in page
-  if(!auth().userId && isProtectedRoute(req)){
+  if (!auth().userId && isProtectedRoute(req)) {
     return auth().redirectToSignIn();
   }
-});
 
+  // If user is logged in and didnt created any org or not on org page or home page, redirect him to the onboarding page
+  if (
+    auth().userId &&
+    !auth().orgId &&
+    req.nextUrl.pathname !== "/onboarding" &&
+    req.nextUrl.pathname !== "/"
+  ) {
+    return NextResponse.redirect(new URL("/onboarding", req.url));
+  }
+});
 export const config = {
   matcher: [
     // Skip Next.js internals and all static files, unless found in search params
