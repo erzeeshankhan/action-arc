@@ -5,8 +5,11 @@ import React from 'react';
 import { Button } from './ui/button';
 import { PenBox } from 'lucide-react';
 import UserMenu from "./user-menu";
+import { checkUser } from '@/lib/checkUser';
 
-const header = () => {
+const header = async() => {
+
+  await checkUser();
   return (
     <div>
       <header className="container mx-auto">
