@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 export async function getOrganization(slug){
     // we will get the user from the clerk Auth
@@ -21,4 +21,30 @@ export async function getOrganization(slug){
     if (!user) {
         throw error("User not found");
     }
+
+    // Getting the organiization details
+    const organization = await clerkClient().organizations.getOrganization({
+        slug
+    })
+
+    if (!organization){
+        return null;
+    }
+
+    // checking if the user who is trying to fetch our organization is actually a member of this organization or not
+    // getting the membership array of the organization
+    const { data: membership } = await clerkClient().organizations.getOrganizationMembershipList({
+        organizationId: organization.id,
+    })
+
+    // checking if the user is a member of this organization or not / part of the membership array
+    const userMembership = membership.find(
+        (membership) => membership.publicUserData.userId === userId
+    );
+
+    if (!userMembership) {
+        return null;
+    }
+
+    return organization;
 };

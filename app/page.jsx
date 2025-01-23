@@ -36,19 +36,17 @@ export default function Home() {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="container mx-auto py-20 text-center">
-        <h1 className="text-6xl sm:text-7xl lg:text-8xl font-extrabold gradient-title pb-6 flex flex-col">
-          Stay Ahead  <br />
-          <span className="flex mx-auto gap-2 sm:gap-4 items-center">
+        <h1 className="text-6xl sm:text-7xl lg:text-8xl font-extrabold  pb-6 flex flex-col">
+          Stay Ahead
+          <span className="flex mx-auto gap-1 sm:gap-4 items-center">
             with
-            <span style={{ color: "#7895fd" }}>
-              Action Arc
-            </span>
+            <span className="gradient-title ">ActionArc</span>
             <Image
               src={"/action1.png"}
-              alt="Zscrum Logo"
-              width={500}
+              alt="ActionArc Logo"
+              width={600}
               height={90}
-              className="h-10 sm:h-24 w-auto object-contain"
+              className="h-10 sm:h-24 w-auto"
             />
           </span>
         </h1>
