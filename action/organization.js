@@ -39,7 +39,7 @@ export async function getOrganization(slug){
 
     // checking if the user is a member of this organization or not / part of the membership array
     const userMembership = membership.find(
-        (membership) => membership.publicUserData.userId === userId
+        (member) => member.publicUserData.userId === userId
     );
 
     if (!userMembership) {

@@ -8,7 +8,7 @@ import UserMenu from "./user-menu";
 import { checkUser } from '@/lib/checkUser';
 import UserLoading from './user-loading';
 
-const header = async() => {
+const header = async () => {
 
   await checkUser();
   return (
@@ -31,11 +31,11 @@ const header = async() => {
 
           {/* Right side of the navbar */}
           <div className="flex items-center gap-4">
-            <Link href={"/projects/create"} >
+            <Link href={"/project/create"} >
               {/* varients are pre built styles for shadcn ui components */}
               <Button variant='destructive' className="flex items-center gap-2">
-                <PenBox width={17} />
-                <span>Create Project</span>
+                <PenBox width={19} />
+                <span className="hidden md:inline">Create Project</span>
               </Button>
             </Link>
 
