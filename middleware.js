@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
 
 // below we can add the paths we want to protect from use and pass this function to the clerkMiddleware and add conditions on which we give access to user or not 
