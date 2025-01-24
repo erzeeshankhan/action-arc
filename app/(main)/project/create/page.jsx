@@ -1,20 +1,23 @@
 "use client"
 
+// This is Create Project Page
+
+
+
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-// import { useRouter } from "next/navigation";
 import { useOrganization, useUser } from "@clerk/nextjs";
-// import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-// import { Textarea } from "@/components/ui/textarea";
-// import useFetch from "@/hooks/use-fetch";
+import useFetch from "@/hooks/use-fetch";
 import { projectSchema } from "@/app/lib/validators";
-// import { createProject } from "@/actions/projects";
 // import { BarLoader } from "react-spinners";
 import OrgSwitcher from "@/components/org-switcher";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { createProject } from "@/action/projects";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 
 
@@ -36,18 +39,46 @@ const CreateProjectPage = () => {
     const { isLoaded: isUserLoaded } = useUser();
     // making an isadmin state to mainteain and check in other places too that user is admin or not 
     const [isAdmin, setIsAdmin] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
         if (isOrgLoaded && isUserLoaded && membership) {
             setIsAdmin(membership.role === "org:admin");
         }
         //if these three things change, the useEffect will get called again
-    }, [isOrgLoaded, isUserLoaded, membership])
+    }, [isOrgLoaded, isUserLoaded, membership]);
 
+    //
+    const {
+        data: project,
+        loading,
+        error,
+        fn: createProjectFn,
+    } = useFetch(createProject);
+
+
+    // 
+    useEffect(() => {
+        if (project) {
+            toast.success("Project created successfully");
+            router.push(`/project/${project.id}`);
+        }
+    }, [loading]);
+
+
+    // an empty form to pass in to the handleSubmit in below form
+    const onSubmit = async (data) => {
+
+        createProjectFn(data);
+    };
+
+    // 
     if (!isOrgLoaded || !isUserLoaded) {
         return null;
     }
 
+
+    // 
     if (!isAdmin) {
         return (
             <div className="flex flex-col gap-2 items-center">
@@ -59,11 +90,6 @@ const CreateProjectPage = () => {
         );
     }
 
-    // an empty form to pass in to the handleSubmit in below form
-    const onSubmit = async () => {
-
-
-    }
 
     // Form for creating project 
     return (
@@ -72,7 +98,7 @@ const CreateProjectPage = () => {
             <div className="">
 
                 <form className="flex flex-col space-y-4" onSubmit={handleSubmit(onSubmit)}>
-                    
+
                     {/* Input for name */}
                     <div className="name">
                         <Input
@@ -109,9 +135,11 @@ const CreateProjectPage = () => {
                         {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
                     </div>
 
-                    <Button type="submit" size="lg" className="bg-blue-950 text-white  ">
-                        Submit
+                    <Button disabled={loading} type="submit" size="lg" className="bg-blue-950 text-white  ">
+                        {/* If loading is true it says creating pr if not it says create pr */}
+                        {loading ? "Creating" : "Create Project"}
                     </Button>
+                    {error && <p className="text-red-500 text-sm mt-2">{error.message}</p>}
                 </form>
             </div>
         </div>

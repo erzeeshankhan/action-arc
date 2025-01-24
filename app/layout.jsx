@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import Header from '@/components/header';
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from '@clerk/themes'
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,6 +39,7 @@ export default function RootLayout({ children }) {
             <main className="min-h-screen">
               {children}
             </main>
+            <Toaster richColors />
             <footer className="bg-gray-900 py-10">
               <div className="container mx-auto px-4 text-center text-gray-200">
                 <p>Made By Zeeshan Khan </p>
