@@ -1,0 +1,176 @@
+"use client";
+
+// This is Create Project Page
+
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useOrganization, useUser } from "@clerk/nextjs";
+import { Input } from "@/components/ui/input";
+import useFetch from "@/hooks/use-fetch";
+import { projectSchema } from "@/app/lib/validators";
+import { BarLoader } from "react-spinners";
+import OrgSwitcher from "@/components/org-switcher";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { createProject } from "@/action/projects";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+
+const CreateProjectPage = () => {
+    // Using react hook form with use Form hook
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        resolver: zodResolver(projectSchema),
+    });
+
+    // Check if the user is admin or not
+    const { isLoaded: isOrgLoaded, membership } = useOrganization();
+    const { isLoaded: isUserLoaded } = useUser();
+    const [isAdmin, setIsAdmin] = useState(false);
+    const router = useRouter();
+
+    // Set admin state when organization and user data are loaded
+    useEffect(() => {
+        if (isOrgLoaded && isUserLoaded && membership) {
+            const adminStatus = membership.role === "org:admin";
+            setIsAdmin(adminStatus);
+            if (!adminStatus) {
+                toast.error("You must be an admin to create a project.");
+            }
+        }
+    }, [isOrgLoaded, isUserLoaded, membership]);
+
+    // Fetch hook for project creation
+    const {
+        loading,
+        error,
+        data: project,
+        fn: createProjectFn,
+    } = useFetch(createProject);
+
+    // Form submission handler
+    const onSubmit = async (data) => {
+        if (!isAdmin) {
+            toast.error("Only organization admins can create projects.");
+            return;
+        }
+
+        createProjectFn(data);
+    };
+
+    // Redirect after successful project creation
+    useEffect(() => {
+        if (!loading && project) {
+            router.push(`/project/${project.id}`);
+            toast.success("Project created successfully");
+        }
+    }, [loading, project, router]);
+
+    // Return null if organization or user data isn't loaded
+    if (!isOrgLoaded || !isUserLoaded) {
+        return <div className="text-center">Loading...</div>;
+    }
+
+    // Display message if the user isn't an admin
+    if (!isAdmin) {
+        return (
+            <div className="flex flex-col gap-2 items-center">
+                <span className="text-2xl gradient-title">
+                    Oops! Only Admins can create projects.
+                </span>
+                <OrgSwitcher />
+            </div>
+        );
+    }
+
+    // Form for creating project
+    return (
+        <div className="container mx-auto px-4 py-10">
+            <h1>Create New Project</h1>
+            <div className="">
+                <form
+                    className="flex flex-col space-y-4"
+                    onSubmit={handleSubmit(onSubmit)}
+                >
+                    {/* Input for name */}
+                    <div className="name">
+                        <Input
+                            id="name"
+                            className="bg-slate-850"
+                            placeholder="Project Name"
+                            aria-label="Project Name"
+                            {...register("name")}
+                        />
+                        {errors.name && (
+                            <p className="text-red-500 text-sm mt-1">
+                                {errors.name.message}
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Input for Key */}
+                    <div className="key">
+                        <Input
+                            id="key"
+                            className="bg-slate-850"
+                            placeholder="Project Key (Ex: ARCT)"
+                            aria-label="Project Key"
+                            {...register("key")}
+                        />
+                        {errors.key && (
+                            <p className="text-red-500 text-sm mt-1">
+                                {errors.key.message}
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Input for Description */}
+                    <div className="description">
+                        <Textarea
+                            id="description"
+                            className="bg-slate-850"
+                            placeholder="Description"
+                            aria-label="Project Description"
+                            {...register("description")}
+                        />
+                        {errors.description && (
+                            <p className="text-red-500 text-sm mt-1">
+                                {errors.description.message}
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Loading indicator */}
+                    {loading && (
+                        <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />
+                    )}
+
+                    {/* Submit Button */}
+                    <Button
+                        disabled={loading || Object.keys(errors).length > 0}
+                        type="submit"
+                        size="lg"
+                        className={`bg-blue-950 text-gray-500 w-60 ${
+                            loading ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
+                    >
+                        {loading ? "Creating..." : "Create Project"}
+                    </Button>
+
+                    {/* Error Message */}
+                    {error && (
+                        <p className="text-red-500 text-sm mt-2">
+                            {error?.message || "An unexpected error occurred."}
+                        </p>
+                    )}
+                </form>
+            </div>
+        </div>
+    );
+};
+
+export default CreateProjectPage;

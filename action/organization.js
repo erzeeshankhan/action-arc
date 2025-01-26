@@ -24,7 +24,7 @@ export async function getOrganization(slug){
 
     // Getting the organiization details
     const organization = await clerkClient().organizations.getOrganization({
-        slug
+        slug,
     })
 
     if (!organization){
