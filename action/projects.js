@@ -69,10 +69,43 @@ export async function getProjects(orgId) {
         throw new Error('User is not found');
     }
 
-    const projects = await db.projectfindMany({
+    const projects = await db.project.findMany({
         where: { organizationId: orgId },
         // ordering the projects in descending order wrt when its created (createdAt)
         orderBy: { createdAt: "desc" },
     })
     return projects;
+}
+
+
+// Action for deleting the projects
+
+export async function deleteProject(projectId) {
+    const { userId, orgId, orgRole } = auth();
+
+    // check if user is authenticated
+    if (!userId || !orgId) {
+        throw new Error('User is not authenticated');
+    }
+
+    // check if the user is an organization admin
+    if (orgRole !== 'org:admin') {
+        throw new Error('Only organization admins can delete projects');
+    }
+
+    // check if the project exists
+    const project = await db.project.findUnique({
+        where: { id: projectId },
+    });
+    if (!project) {
+        throw new Error('Project not found');
+    }
+
+
+    // delete the project
+    await db.project.delete({
+        where: { id: projectId },
+    });
+
+    return { success: true };
 }

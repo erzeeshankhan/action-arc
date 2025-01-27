@@ -1,5 +1,6 @@
 // This file is a custom Hook to handle the API calls states such as is loading, storing data, errors, etc
 // (cb) = call back
+"use client"
 import { useState } from "react";
 import { toast } from "sonner"; 
 
