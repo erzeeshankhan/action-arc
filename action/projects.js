@@ -45,3 +45,34 @@ export async function createProject(data) {
         throw new Error("Error creating project: " + error.message);
     }
 }
+
+
+// Fetching the projects to display on the organization main page, done wrt orgId 
+export async function getProjects(orgId) {
+
+    // Taking userId from auth()
+    const { userId } = auth();
+
+    // check
+    if (!userId) {
+        throw new Error('User is not authenticated');
+    }
+
+    // check if user is in the db
+    const user = await db.user.findUnique({
+        where: {
+            clerkUserId: userId
+        },
+    });
+
+    if (!user) {
+        throw new Error('User is not found');
+    }
+
+    const projects = await db.projectfindMany({
+        where: { organizationId: orgId },
+        // ordering the projects in descending order wrt when its created (createdAt)
+        orderBy: { createdAt: "desc" },
+    })
+    return projects;
+}
