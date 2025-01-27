@@ -52,7 +52,7 @@ const CreateProjectPage = () => {
         }
     }, [isOrgLoaded, isUserLoaded, membership]);
 
-    //
+    // calling api to create project
     const {
         loading,
         error,
