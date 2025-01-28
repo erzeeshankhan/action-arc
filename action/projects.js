@@ -1,6 +1,7 @@
 "use server"
 
 
+import NotFound from "@/app/not-found";
 import { db } from "@/lib/prisma";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 
@@ -101,11 +102,54 @@ export async function deleteProject(projectId) {
         throw new Error('Project not found');
     }
 
-
     // delete the project
     await db.project.delete({
         where: { id: projectId },
     });
 
     return { success: true };
+}
+
+
+//----------- Action for fetching the project by projectId ------------ 
+
+export async function getProject(projectId) {
+    const { userId, orgId } = auth();
+
+    // check if user is authenticated
+    if (!userId || !orgId) {
+        throw new Error('User is not authenticated');
+    }
+
+    // check if the user exist in our database 
+    const user = await db.user.findUnique({
+        where: {
+            clerkUserId: userId
+        },
+    });
+    if (!user) {
+        throw new Error('User not found');
+    }
+
+       // Fetch the project, including its sprints
+       const project = await db.project.findUnique({
+        where: { id: projectId },
+        include: {
+            sprints: {
+                orderBy: { createdAt: 'desc' },
+            },
+        },
+    });
+
+    if (!project) {
+        throw new Error('Project not found.');
+    }
+
+    // Verify the project belongs to the organization
+    if (project.organizationId !== orgId) {
+        return null;
+    }
+
+    // Serialize the project data to ensure compatibility with Client Components
+    return project;
 }
