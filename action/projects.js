@@ -141,14 +141,6 @@ export async function getProject(projectId) {
         },
     });
 
-    if (!project) {
-        throw new Error('Project not found.');
-    }
-
-    // Verify the project belongs to the organization
-    if (project.organizationId !== orgId) {
-        return null;
-    }
 
     // Serialize the project data to ensure compatibility with Client Components
     return project;
