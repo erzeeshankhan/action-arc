@@ -37,8 +37,7 @@ const ProjectPage = async ({ params }) => {
         </>
       ) : (
         <div className='text-center text-muted-foreground p-5'><span>No Sprints found, create sprint from button above</span></div>
-      )
-      }
+      )}
 
 
     </div>
