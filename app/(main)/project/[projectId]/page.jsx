@@ -3,9 +3,9 @@
 import { getProject } from '@/action/projects';
 import { notFound } from 'next/navigation';
 import React from 'react'
-import SprintCraetionForm from '../components/create-sprint';
+import SprintCreationForm from '../components/create-sprint';
 
-const ProjectPage = async ({ params }) => {
+export default async function ProjectPage({ params }) {
 
   const { projectId } = params;
 
@@ -21,7 +21,7 @@ const ProjectPage = async ({ params }) => {
     <div className='container mx-auto'>
       {/* Sprint creation component */}
 
-      <SprintCraetionForm
+      <SprintCreationForm
       projectTitle={project.name}
       projectId={project.id}
       projectKey={project.key}
@@ -44,4 +44,3 @@ const ProjectPage = async ({ params }) => {
   )
 }
 
-export default ProjectPage
