@@ -3,23 +3,22 @@
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 
-export async function createSprint( projectId, data ) {
+export async function createSprint(projectId, data) {
 
 
     // check if the user is authenticated
     const { userId, orgId } = auth();
-    if ( !userId || !orgId ) {
+    if (!userId || !orgId) {
         throw new Error('User is not authenticated');
     }
 
     const project = await db.project.findUnique({
-        where: {
-            id: projectId
-        },
+        where: { id: projectId },
+        include: { sprints: { orderBy: { createdAt: "desc" } } },
     });
 
-    if (!project || project.organizationid !== orgId) {
-        return null;
+    if (!project || project.organizationId !== orgId) {
+        throw new Error('Project not found');
     }
 
 
@@ -30,8 +29,8 @@ export async function createSprint( projectId, data ) {
             startDate: data.startDate,
             endDate: data.endDate,
             status: "PLANNED",
-            projectId,
-        }
+            projectId: projectId,
+        },
     });
 
     return sprint;
