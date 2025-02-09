@@ -23,6 +23,7 @@ import 'react-day-picker/dist/style.css';
 import { sprintSchema } from "@/app/lib/validators";
 import useFetch from "@/hooks/use-fetch";
 import { createSprint } from "@/action/sprints";
+import { toast } from "sonner";
 
 export default function SprintCreationForm({
   projectTitle,
@@ -61,6 +62,7 @@ export default function SprintCreationForm({
       endDate: dateRange.to,
     });
     setShowForm(false);
+    toast.success("Sprint created successfully");
     router.refresh(); // Refresh the page to show updated data
   };
 
