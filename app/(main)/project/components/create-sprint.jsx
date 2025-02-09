@@ -21,7 +21,7 @@ import { format, addDays } from "date-fns";
 
 import { sprintSchema } from "@/app/lib/validators";
 import useFetch from "@/hooks/use-fetch";
-import { createSprint } from "@/actions/sprints";
+import { createSprint } from "@/action/sprints";
 
 export default function SprintCreationForm({
   projectTitle,
@@ -38,7 +38,7 @@ export default function SprintCreationForm({
 
   const { loading: createSprintLoading, fn: createSprintFn } =
     useFetch(createSprint);
-
+    
   const {
     register,
     control,
@@ -62,6 +62,7 @@ export default function SprintCreationForm({
     setShowForm(false);
     router.refresh(); // Refresh the page to show updated data
   };
+
 
   return (
     <>
@@ -115,9 +116,8 @@ export default function SprintCreationForm({
                       <PopoverTrigger asChild>
                         <Button
                           variant="outline"
-                          className={`w-full justify-start text-left font-normal bg-slate-950 ${
-                            !dateRange && "text-muted-foreground"
-                          }`}
+                          className={`w-full justify-start text-left font-normal bg-slate-950 ${!dateRange && "text-muted-foreground"
+                            }`}
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
                           {dateRange.from && dateRange.to ? (
