@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import { CalendarIcon } from "lucide-react";
 import { DayPicker } from "react-day-picker";
 import { format, addDays } from "date-fns";
+import 'react-day-picker/dist/style.css';
 
 import { sprintSchema } from "@/app/lib/validators";
 import useFetch from "@/hooks/use-fetch";
@@ -38,7 +39,7 @@ export default function SprintCreationForm({
 
   const { loading: createSprintLoading, fn: createSprintFn } =
     useFetch(createSprint);
-    
+
   const {
     register,
     control,
@@ -62,7 +63,6 @@ export default function SprintCreationForm({
     setShowForm(false);
     router.refresh(); // Refresh the page to show updated data
   };
-
 
   return (
     <>

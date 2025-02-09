@@ -12,13 +12,14 @@ export async function createSprint(projectId, data) {
         throw new Error('User is not authenticated');
     }
 
+    // sprint creation bug was by adding the include: { sprints: {orderBy: {createdAt: "desc" } } } in the findUnique method of the project 
     const project = await db.project.findUnique({
         where: { id: projectId },
-        include: { sprints: { orderBy: { createdAt: "desc" } } },
+        include: { sprints: {orderBy: {createdAt: "desc" } } },
     });
 
     if (!project || project.organizationId !== orgId) {
-        throw new Error('Project not found');
+        throw new Error("Project not found");
     }
 
 
@@ -29,8 +30,8 @@ export async function createSprint(projectId, data) {
             startDate: data.startDate,
             endDate: data.endDate,
             status: "PLANNED",
-            projectId: projectId,
-        },
+            projectId,
+        }
     });
 
     return sprint;
