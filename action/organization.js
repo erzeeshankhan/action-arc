@@ -3,7 +3,7 @@
 import { db } from "@/lib/prisma";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 
-export async function getOrganization(slug){
+export async function getOrganization(slug) {
     // we will get the user from the clerk Auth
     const { userId } = auth();
 
@@ -27,7 +27,7 @@ export async function getOrganization(slug){
         slug,
     })
 
-    if (!organization){
+    if (!organization) {
         return null;
     }
 
@@ -48,3 +48,37 @@ export async function getOrganization(slug){
 
     return organization;
 };
+
+
+// getting the organization users for ussue assignee and reporter
+export async function getOrganizationUsers(orgId) {
+    const { userId } = auth();
+    if (!userId) {
+        throw new Error('User is not authenticated');
+    }
+
+    const user = await db.user.findMany({
+        where: { clerkUserId: userId },
+    });
+
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    const organizationMemberships =
+        await clerkClient().organizations.getOrganizationMembershipList({
+            organizationId: organization.id,
+        }
+        );
+
+    const userIds = organizationMemberships.data.map(
+        (member) => member.publicUserData.userId
+    );
+
+    const users = await db.user.findMany({
+        where: { clerkUserId: { id: userIds } },
+    });
+
+    return users;
+
+}

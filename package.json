@@ -11,6 +11,7 @@
   "dependencies": {
     "@clerk/nextjs": "^5.7.1",
     "@clerk/themes": "^2.2.8",
+    "@hello-pangea/dnd": "^18.0.1",
     "@hookform/resolvers": "^3.10.0",
     "@prisma/client": "^6.2.1",
     "@radix-ui/react-accordion": "^1.2.2",
