@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import SprintManager from './sprint-manager';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
-import { statuses } from '@/data/status';
+import statuses from "@/data/status.json"; 
 
 const SprintBoard = ({ sprints, projectId, orgId }) => {
 
@@ -35,32 +35,16 @@ const SprintBoard = ({ sprints, projectId, orgId }) => {
 
                     {statuses.map((column) => (
                         <Droppable key={column.key} droppableId={column.key}>
-                            {(provided) => {
-                                return
-                                <div>
+                            {(provided) => (
+                                <div {...provided.droppableProps} ref={provided.innerRef} className='space-y-2'>
                                     <h3>{column.name}</h3>
+                                    {provided.placeholder}
                                 </div>
-                            }}
+                            )}
                         </Droppable>
-
                     ))}
 
 
-
-                    {/* zone 2 */}
-                    <Droppable>
-
-                    </Droppable>
-
-                    {/* zone 3 */}
-                    <Droppable>
-
-                    </Droppable>
-
-                    {/* zone 4 */}
-                    <Droppable>
-
-                    </Droppable>
 
                 </div>
             </DragDropContext>
