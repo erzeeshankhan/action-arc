@@ -1,3 +1,5 @@
+"use server";
+
 // All the actions related to issues are defined here
 
 import { db } from "@/lib/prisma";

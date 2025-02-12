@@ -15,6 +15,11 @@ const SprintBoard = ({ sprints, projectId, orgId }) => {
         sprints.find((sprint) => sprint.status === "ACTIVE") || sprints[0]
     );
 
+    const handleAddIssue = (status) => {
+        setSelectedStatus(status);
+        setIsDrawerOpen(true);
+    };
+
     const onDragEnd = () => {
 
     };
@@ -22,14 +27,11 @@ const SprintBoard = ({ sprints, projectId, orgId }) => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [selectedStatus, setSelectedStatus] = useState(null);
 
-    const handleAddIssue = (status) => {
-        setSelectedStatus(status);
-        setIsDrawerOpen(true);
-    };
+
 
     const handleIssueCreated = (issue) => {
         // fetch issues here 
-        
+
     }
 
     return (
@@ -74,7 +76,8 @@ const SprintBoard = ({ sprints, projectId, orgId }) => {
                                         >
                                             <Plus className='mr-2 h-4 w-4' />
                                             Create Issue
-                                        </Button>}
+                                        </Button>
+                                    }
 
                                 </div>
                             )}
