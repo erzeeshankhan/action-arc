@@ -13,6 +13,7 @@ import MDEditor from "@uiw/react-md-editor";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { BarLoader } from "react-spinners";
+import { toast } from "sonner";
 
 export default function IssueCreationDrawer({
     isOpen,
@@ -44,6 +45,7 @@ export default function IssueCreationDrawer({
         register,
         handleSubmit,
         formState: { errors },
+        reset,
     } = useForm({
 
         resolver: zodResolver(issueSchema),
@@ -54,6 +56,7 @@ export default function IssueCreationDrawer({
         },
 
     })
+
 
     useEffect(() => {
         if (isOpen && orgId) {
@@ -72,13 +75,20 @@ export default function IssueCreationDrawer({
         });
     };
 
+
     useEffect(() => {
         if (newIssue) {
             reset();
             onClose();
-            onIssueCreated();
+
+            if (onIssueCreated) {
+                onIssueCreated(); // Ensure it's defined before calling
+            }
+
+            toast.success("Issue Added Successfully"); // Ensure toast import is correct
         }
     }, [newIssue, createIssueLoading]);
+
 
     return (
         <Drawer open={isOpen} onClose={onClose}>
@@ -87,7 +97,7 @@ export default function IssueCreationDrawer({
                     <DrawerTitle>Create New Issue</DrawerTitle>
                 </DrawerHeader>
                 {usersLoading && <BarLoader width={"100%"} color="#36d7b7" />}
-                <form onSubmit={handleSubmit(onSubmit)} className="p-4 space-y-4">
+                <form onSubmit={handleSubmit(onSubmit)} className="p-4 mb-4 space-y-4">
                     <div>
                         <label htmlFor="title" className="block text-sm font-medium mb-1">Title</label>
                         <Input id="title" {...register("title")} />
@@ -190,6 +200,11 @@ export default function IssueCreationDrawer({
                         {createIssueLoading ? "Creating..." : "Create Issue"}
                     </Button>
                 </form>
+
+
+                      
+
+
             </DrawerContent>
         </Drawer>
 
