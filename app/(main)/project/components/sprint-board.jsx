@@ -1,12 +1,15 @@
 "use client";
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SprintManager from './sprint-manager';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import statuses from "@/data/status.json";
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import IssueCreationDrawer from './create-issue';
+import useFetch from '@/hooks/use-fetch';
+import { getIssuesForSprint } from '@/action/issues';
+import { BarLoader } from 'react-spinners';
 
 const SprintBoard = ({ sprints, projectId, orgId }) => {
 
@@ -27,12 +30,29 @@ const SprintBoard = ({ sprints, projectId, orgId }) => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [selectedStatus, setSelectedStatus] = useState(null);
 
+    const {
+        loading: issuesLoading,
+        error: issuesError,
+        fn: fetchIssues,
+        data: issues,
+        setData: setIssues,
+    } = useFetch(getIssuesForSprint);
+
+    const [filteredIssues, setFilteredIssues] = useState(issues);
+
+    useEffect(() => {
+        if (currentSprint.id) {
+            fetchIssues(currentSprint.id);
+        }
+    }, [currentSprint.id]);
 
 
     const handleIssueCreated = (issue) => {
         // fetch issues here 
-
+        fetchIssues(currentSprint.id);
     }
+
+    if (issuesError) return <div>Error loading issues</div>;
 
     return (
         <div>
@@ -44,6 +64,8 @@ const SprintBoard = ({ sprints, projectId, orgId }) => {
                 sprints={sprints}
                 projectId={projectId}
             />
+
+            {issuesLoading && <BarLoader className="mt-4" width={"100%"} color="#36d7b7" />}
 
 
             {/* Kanban Board */}
