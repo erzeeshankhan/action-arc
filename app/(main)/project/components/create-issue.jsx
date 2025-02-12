@@ -200,11 +200,6 @@ export default function IssueCreationDrawer({
                         {createIssueLoading ? "Creating..." : "Create Issue"}
                     </Button>
                 </form>
-
-
-                      
-
-
             </DrawerContent>
         </Drawer>
 

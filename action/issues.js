@@ -69,3 +69,108 @@ export async function getIssuesForSprint(sprintId) {
 
     return issues;
 }
+
+
+// Logic to handle the issue cards api calls when the cards change their indexes/ or cards are moved here and there in other columns
+// we will use the concept of "Transaction" in prisma 
+export async function updateIssueOrder(updatedIssues) {
+    const { userId, orgId } = auth();
+
+    if (!userId || !orgId) {
+        throw new Error("Unauthorized");
+    }
+
+    // Start a transaction
+    await db.$transaction(async (prisma) => {
+        // Update each issue
+        for (const issue of updatedIssues) {
+            await prisma.issue.update({
+                where: { id: issue.id },
+                data: {
+                    status: issue.status,
+                    order: issue.order,
+                },
+            });
+        }
+    });
+
+    return { success: true };
+}
+
+
+// Logic to delete an issue
+export async function deleteIssue(issueId) {
+    const { userId, orgId } = auth();
+
+    if (!userId || !orgId) {
+        throw new Error("Unauthorized");
+    }
+
+    const user = await db.user.findUnique({
+        where: { clerkUserId: userId },
+    });
+
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    const issue = await db.issue.findUnique({
+        where: { id: issueId },
+        include: { project: true },
+    });
+
+    if (!issue) {
+        throw new Error("Issue not found");
+    }
+
+    if (
+        issue.reporterId !== user.id &&
+        !issue.project.adminIds.includes(user.id)
+    ) {
+        throw new Error("You don't have permission to delete this issue");
+    }
+
+    await db.issue.delete({ where: { id: issueId } });
+
+    return { success: true };
+}
+
+// Logic to update an issue
+export async function updateIssue(issueId, data) {
+    const { userId, orgId } = auth();
+
+    if (!userId || !orgId) {
+        throw new Error("Unauthorized");
+    }
+
+    try {
+        const issue = await db.issue.findUnique({
+            where: { id: issueId },
+            include: { project: true },
+        });
+
+        if (!issue) {
+            throw new Error("Issue not found");
+        }
+
+        if (issue.project.organizationId !== orgId) {
+            throw new Error("Unauthorized");
+        }
+
+        const updatedIssue = await db.issue.update({
+            where: { id: issueId },
+            data: {
+                status: data.status,
+                priority: data.priority,
+            },
+            include: {
+                assignee: true,
+                reporter: true,
+            },
+        });
+
+        return updatedIssue;
+    } catch (error) {
+        throw new Error("Error updating issue: " + error.message);
+    }
+}
