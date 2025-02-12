@@ -5,12 +5,19 @@ import { getOrganization } from '@/action/organization';
 import OrgSwitcher from '@/components/org-switcher';
 import React from 'react'
 import ProjectList from './_components/project-list';
+import UserIssues from './_components/user-issues';
+import { redirect } from 'next/navigation';
+import { auth } from '@clerk/nextjs/server';
 
 const Organization = async ({ params }) => {
   const { orgId } = params;
 
   // Making the api call to the getOrganization() func in the action folder to fetch the data by that function
   const organization = await getOrganization(orgId);
+  const { userId } = auth();
+  if (!userId) {
+    redirect("/sign-in");
+  }
 
   // if the organization not found 
   if (!organization) {
@@ -36,7 +43,9 @@ const Organization = async ({ params }) => {
         <ProjectList orgId={organization.id} />
       </div>
 
-      <div className="mt-8">Show user assigned and reported issues here</div>
+      <div className="mt-8">
+        <UserIssues userId={userId} />
+      </div>
     </div>
   )
 

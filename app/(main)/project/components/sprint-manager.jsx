@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import useFetch from "@/hooks/use-fetch";
 import { format, formatDistanceToNow, isAfter, isBefore } from "date-fns";
 import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import React from 'react'
 import { BarLoader } from "react-spinners";
@@ -14,6 +15,8 @@ const SprintManager = ({ sprint, setSprint, sprints, projectId }) => {
     //   for current sprint we wld need status of the sprint 
     // we need it to determine if u are supposed to start the sprint or not
     const [status, setStatus] = useState(sprint.status);
+    const router = useRouter();
+    const searchParams = useSearchParams();
 
     const now = new Date();
     const startDate = new Date(sprint.startDate);
@@ -49,6 +52,19 @@ const SprintManager = ({ sprint, setSprint, sprints, projectId }) => {
         }
     }, [updatedStatus, loading]);
 
+    useEffect(() => {
+        const sprintId = searchParams.get("sprint");
+        if (sprintId && sprintId !== sprint.id) {
+            const selectedSprint = sprints.find((s) => s.id === sprintId);
+            if (selectedSprint) {
+                setSprint(selectedSprint);
+                setStatus(selectedSprint.status);
+            }
+        }
+    }, [searchParams, sprints]);
+
+
+
     // handle the sprint change 
     const handleSprintChange = (value) => {
         // finding the selected sprint in the sprint list 
@@ -57,6 +73,7 @@ const SprintManager = ({ sprint, setSprint, sprints, projectId }) => {
         // setting the selected sprint and its status
         setSprint(selectedSprint);
         setStatus(selectedSprint.status);
+        router.replace(`/project/${projectId}`, undefined, { shallow: true });
     }
 
     // function to determine if the sprint is active or not (if sprint is started or planned or ended)

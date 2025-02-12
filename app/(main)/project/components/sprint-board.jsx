@@ -180,7 +180,7 @@ const SprintBoard = ({ sprints, projectId, orgId }) => {
 
 
                                     {/* Issues */}
-                                    {issues
+                                    {filteredIssues
                                         ?.filter((issue) => issue.status === column.key)
                                         .map((issue, index) => (
                                             <Draggable

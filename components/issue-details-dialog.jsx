@@ -96,7 +96,7 @@ export default function IssueDetailsDialog({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center p-3">
             <DialogTitle className="text-3xl">{issue.title}</DialogTitle>
             {isProjectPage && (
               <Button
