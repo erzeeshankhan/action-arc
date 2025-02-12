@@ -67,9 +67,8 @@ export async function getOrganizationUsers(orgId) {
 
     const organizationMemberships =
         await clerkClient().organizations.getOrganizationMembershipList({
-            organizationId: organization.id,
-        }
-        );
+            organizationId: orgId,
+        });
 
     const userIds = organizationMemberships.data.map(
         (member) => member.publicUserData.userId
