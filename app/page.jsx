@@ -40,7 +40,7 @@ export default function Home() {
           Stay Ahead
           <span className="flex mx-auto gap-1 sm:gap-4 items-center">
             with
-            <span className="gradient-title ">ActionArc</span>
+            <span className="gradient-title">ActionArc</span>
             <Image
               src={"/action1.png"}
               alt="ActionArc Logo"

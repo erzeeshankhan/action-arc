@@ -21,8 +21,8 @@ export default function RootLayout({ children }) {
     <ClerkProvider
       appearance={{
         baseTheme: dark,
-        variables:{
-          
+        variables: {
+
         },
       }}
     >
@@ -30,10 +30,11 @@ export default function RootLayout({ children }) {
       <html lang="en">
         <head>
           <meta name="description" content={metadata.description} />
+          <link rel="icon" type="image/png" href="public\action1.png" />
         </head>
         <body className={`${inter.className} dotted-background`}>
 
-        {/* Nextjs page theme set to dark, imported from theme-provider */}
+          {/* Nextjs page theme set to dark, imported from theme-provider */}
           <ThemeProvider attribute="class" defaultTheme="dark">
             <Header />
             <main className="min-h-screen">
@@ -42,7 +43,18 @@ export default function RootLayout({ children }) {
             <Toaster richColors />
             <footer className="bg-gray-900 py-10">
               <div className="container mx-auto px-4 text-center text-gray-200">
-                <p>Made By Zeeshan Khan </p>
+                <p>
+                  A project by{" "}
+                  <a
+                    className="underline font-semibold text-blue-400 hover:text-blue-500"
+                    href="https://www.linkedin.com/in/zeeshankhan31/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Zeeshan Khan
+                  </a>
+                </p>
+
               </div>
             </footer>
           </ThemeProvider>
