@@ -33,20 +33,22 @@ const features = [
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen ">
       {/* Hero Section */}
-      <section className="container mx-auto py-20 text-center">
-        <h1 className="text-6xl sm:text-7xl lg:text-8xl font-extrabold  pb-6 flex flex-col">
+      <section className="container mx-auto py-20 text-center px-4 overflow-hidden">
+        <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold pb-6 flex flex-col">
           Stay Ahead
-          <span className="flex mx-auto gap-1 sm:gap-4 items-center">
+          <span className="flex flex-wrap justify-center items-center gap-1 sm:gap-4">
             with
-            <span className="gradient-title">ActionArc</span>
+            <span className="gradient-title text-5xl sm:text-7xl md:text-8xl">
+              ActionArc
+            </span>
             <Image
               src={"/action1.png"}
               alt="ActionArc Logo"
               width={600}
               height={90}
-              className="h-10 sm:h-24 w-auto"
+              className="h-8 sm:h-16 md:h-20 lg:h-24 w-auto max-w-full"
             />
           </span>
         </h1>
@@ -108,7 +110,7 @@ export default function Home() {
           <Accordion type="single" collapsible className="w-full">
             {faqs.map((faq, index) => (
               <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger>{faq.question}</AccordionTrigger>
+                <AccordionTrigger className='text-sm sm:text-base'>{faq.question}</AccordionTrigger>
                 <AccordionContent>{faq.answer}</AccordionContent>
               </AccordionItem>
             ))}
@@ -127,7 +129,7 @@ export default function Home() {
             projects and boost productivity.
           </p>
           <Link href="/onboarding">
-            <Button size="lg" className="animate-bounce">
+            <Button size="lg" className="lg:animate-bounce">
               Start For Free <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
