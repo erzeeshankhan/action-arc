@@ -45,7 +45,7 @@ export default function Home() {
             </span>
             <Image
               src={"/action1.png"}
-              alt="ActionArc Logo"
+              alt="ActionArc logo"
               width={600}
               height={90}
               className="h-8 sm:h-16 md:h-20 lg:h-24 w-auto max-w-full"
