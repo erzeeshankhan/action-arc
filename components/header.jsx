@@ -22,9 +22,9 @@ const header = async () => {
                 alt="Zscrum Logo"
                 width={200}
                 height={56}
-                className="h-10 w-auto object-contain"
+                className="hidden md:block h-8 md:h-10 w-auto object-contain"
               />
-              <span>Action Arc</span>
+              <span>ActionArc</span>
             </h1>
           </Link>
 
